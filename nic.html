@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Stylesheet-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+</head>
+
+<body>
+
+
+    <form method="POST" id="employee_form">
+
+        <div class="modal-content">
+
+
+
+            <div class="form-group">
+                <div class="row">
+
+                    <div class="col-md-6 pl-3">
+                        <div class="form-group birthday-gender pr-1 mb-4">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="NIC" id="NIC" placeholder="NIC" aria-label="NIC" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">V</span>
+                                </div>
+                            </div>
+
+                            <span id="NIC_error" class="text-danger" style='color:red;font-size:10px;'></span>
+                        </div>
+
+                        <div class="form-group birthday-gender pr-1">
+                            <div class="form-label-group">
+                                <input type="date" class="form-control" name="birthday" id="birthday">
+
+                            </div>
+                        </div>
+                        <div class="form-floating birthday-gender">
+                            <label for="floatingSelect">Gender</label>
+                            <select class="form-select" name="gender" id="gender">
+                                    <option selected></option>
+                                    <option value="1">Male</option>
+                                    <option value="0">Female</option>
+                                </select>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</body>
+
+</html>
+
+<script type="text/javascript" language="javascript">
+    /*Fetch all Employee data from the database*/
+
+    $(document).ready(function() {
+        /*************************FETCH DATA*******************************/
+
+        //NIC to birthday and gender
+        $("#NIC").focusout(function() {
+            var idNumber = $(this).val();
+            var gender;
+            var month = 0;
+            var day = 0;
+            var year = 0;
+            if (idNumber.length == 12) {
+                year = Number(idNumber.toString().slice(0, 4));
+                var days = Number(idNumber.toString().slice(4, 7));
+
+                if (days > 500) {
+                    gender = '0';
+                    days -= 500;
+                    checkDay(days);
+                } else {
+                    gender = '1';
+                    checkDay(days);
+                }
+            } else if (idNumber.length == 9) {
+                year = Number(idNumber.toString().slice(0, 2));
+                var days = Number(idNumber.toString().slice(2, 5));
+                year += 1900;
+                if (days > 500) {
+                    gender = '0';
+                    days -= 500;
+                    checkDay(days);
+                } else {
+                    gender = '1';
+                    checkDay(days);
+                }
+            } else {
+                $('#NIC_error').html("Your NIC is not Valid. Enter valid one.");
+            }
+
+            function checkDay(days) {
+                switch (true) {
+                    case days > 366:
+                        // month = "error";
+                        break;
+                    case days > 335:
+                        day = days - 335;
+                        month = "12";
+                        break;
+                    case days > 305:
+                        day = days - 305;
+                        month = "11";
+                        break;
+                    case days > 274:
+                        day = days - 274;
+                        month = "10";
+                        break;
+                    case days > 244:
+                        day = days - 244;
+                        month = "09";
+                        break;
+                    case days > 213:
+                        day = days - 213;
+                        month = "08";
+                        break;
+                    case days > 182:
+                        day = days - 182;
+                        month = "07";
+                        break;
+                    case days > 152:
+                        day = days - 152;
+                        month = "06";
+                        break;
+                    case days > 121:
+                        day = days - 121;
+                        month = "05";
+                        break;
+                    case days > 91:
+                        day = days - 91;
+                        month = "04";
+                        break;
+                    case days > 60:
+                        day = days - 60;
+                        month = "03";
+                        break;
+                    case days > 31:
+                        day = days - 31;
+                        month = "02";
+                        break;
+                    case days > 0:
+                        day = days - 0;
+                        month = "01";
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            document.getElementById("birthday").value = year + "-" + month + "-" + day.toLocaleString(
+                'en-US', {
+                    minimumIntegerDigits: 2, //For convert day into 2 digit number like 2 to 02 
+                    useGrouping: false
+                });
+            document.getElementById("gender").value = gender;
+
+        });
+
+
+
+    });
+</script>
